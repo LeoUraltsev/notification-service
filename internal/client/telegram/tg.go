@@ -3,6 +3,7 @@ package telegram
 import (
 	"fmt"
 
+	"github.com/LeoUraltsev/notification-service/internal/config"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -10,14 +11,14 @@ type Telegram struct {
 	Bot *tgbotapi.BotAPI
 }
 
-func New(token string) (*Telegram, error) {
+func New(cfg *config.Config) (*Telegram, error) {
 
-	bot, err := tgbotapi.NewBotAPI(token)
+	bot, err := tgbotapi.NewBotAPI(cfg.Telegram.Token)
 	if err != nil {
 		return nil, err
 	}
 
-	bot.Debug = true
+	bot.Debug = cfg.Telegram.Debug
 
 	return &Telegram{Bot: bot}, nil
 }

@@ -7,12 +7,15 @@ import (
 
 	"github.com/LeoUraltsev/notification-service/internal/application"
 	"github.com/LeoUraltsev/notification-service/internal/client/telegram"
+	"github.com/LeoUraltsev/notification-service/internal/config"
 	appkafka "github.com/LeoUraltsev/notification-service/internal/infra/kafka"
 	"github.com/LeoUraltsev/notification-service/internal/infra/storage/mock"
 	"github.com/segmentio/kafka-go"
 )
 
 func main() {
+
+	cfg := config.New()
 
 	ctx, done := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer done()
@@ -26,7 +29,7 @@ func main() {
 
 	defer reader.Close()
 
-	bot, err := telegram.New("8312292131:AAHkLWFqQXEw-pzUzBv5G5uG-r_YzOerxYA")
+	bot, err := telegram.New(cfg)
 	if err != nil {
 		return
 	}
