@@ -5,11 +5,12 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/LeoUraltsev/notification-service/internal/application"
-	"github.com/LeoUraltsev/notification-service/internal/client/telegram"
+	"github.com/LeoUraltsev/notification-service/internal/application/handlers"
+	"github.com/LeoUraltsev/notification-service/internal/application/service"
 	"github.com/LeoUraltsev/notification-service/internal/config"
 	appkafka "github.com/LeoUraltsev/notification-service/internal/infra/kafka"
 	"github.com/LeoUraltsev/notification-service/internal/infra/storage/mock"
+	"github.com/LeoUraltsev/notification-service/internal/infra/telegram"
 	"github.com/segmentio/kafka-go"
 )
 
@@ -34,10 +35,18 @@ func main() {
 		return
 	}
 
-	go bot.Start()
-
 	repo := mock.New()
-	service := application.New(bot, repo)
+	handlerService := handlers.New(bot, repo)
+
+	updateHandler := telegram.NewUpdateHandler(bot, handlerService)
+
+	go func() {
+		if err := updateHandler.Start(ctx); err != nil {
+			return
+		}
+	}()
+
+	service := service.New(bot, repo)
 
 	k := appkafka.New(reader, service)
 	go k.Handle(ctx)

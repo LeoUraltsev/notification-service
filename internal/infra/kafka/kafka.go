@@ -6,16 +6,16 @@ import (
 	"io"
 	"log"
 
-	"github.com/LeoUraltsev/notification-service/internal/application"
+	"github.com/LeoUraltsev/notification-service/internal/application/service"
 	"github.com/segmentio/kafka-go"
 )
 
 type KafkaConsumer struct {
-	service *application.NotificationService
+	service *service.NotificationService
 	reader  *kafka.Reader
 }
 
-func New(reader *kafka.Reader, service *application.NotificationService) *KafkaConsumer {
+func New(reader *kafka.Reader, service *service.NotificationService) *KafkaConsumer {
 	return &KafkaConsumer{
 		service: service,
 		reader:  reader,
