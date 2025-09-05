@@ -49,6 +49,20 @@ services:
     networks:
       - kafka-net
 
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    hostname: 'redis'
+    environment:
+      - REDIS_PASSWORD=password
+      - REDIS_USER=admin
+      - REDIS_USER_PASSWORD=password
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./redisdata:/data
+
 networks:
   kafka-net:
     driver: bridge
@@ -57,3 +71,4 @@ volumes:
   zookeeper-data:
   zookeeper-log:
   kafka-data:
+  redisdata:
